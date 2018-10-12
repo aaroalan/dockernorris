@@ -8,7 +8,13 @@ class JokesController < ApplicationController
   XML
 
   def index
-    json = { joke: joke, workshop: workshop_name, info: os_information }
+    json = {
+      joke: joke,
+      server: server_identifier,
+      redis_id: redis_id,
+      workshop: workshop_name,
+      info: os_information
+    }
     render json: json
   end
 
@@ -27,5 +33,38 @@ class JokesController < ApplicationController
     xml_doc.at('.//workshops/workshop').text
   rescue
     'Ops Nokogiri is not working!'
+  end
+
+  def server_identifier
+    if File.exists?(server_id_path)
+      File.read(server_id_path)
+    else
+      name = server_id
+      File.open(server_id_path, 'w') { |f| f.write(name) }
+      name
+    end
+  end
+
+  def server_id
+    "#{Faker::StarWars.planet}-#{Faker::StarWars.specie}-" \
+    "#{SecureRandom.hex(4)}".parameterize
+  end
+
+  def server_id_path
+    "#{Rails.root}/tmp/pids/server_id"
+  end
+
+  def redis_id
+    redis.info['run_id']
+  rescue Exception => e
+    e.message
+  end
+
+  def redis
+    @redis ||= redis = Redis.new(url: redis_url)
+  end
+
+  def redis_url
+    ENV['REDIS_URL'] || 'redis://localhost:6379'
   end
 end

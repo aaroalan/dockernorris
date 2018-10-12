@@ -14,6 +14,8 @@ gem 'nokogiri'
 
 gem 'pry'
 gem 'rest-client'
+gem 'redis'
+gem 'faker'
 
 group :development, :test do
   gem 'byebug'
