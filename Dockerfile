@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY . /app
 RUN bundle install
-RUN rm -fr /app/tmp/* && rm /app/log/*
+RUN rm -fr /app/tmp/* && rm -fr /app/log/*
 
 FROM ruby:2.3.7-slim-stretch AS app_image
 
