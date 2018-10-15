@@ -13,7 +13,8 @@ class JokesController < ApplicationController
       server: server_identifier,
       redis_id: redis_id,
       workshop: workshop_name,
-      info: os_information
+      info: os_information,
+      version: ENV['APP_VERSION'] || 'No env var with version'
     }
     render json: json
   end
